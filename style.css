@@ -1,9 +1,64 @@
+html {
+  background-color: ghostwhite;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
 #map {
-  height: 600px;
+  height: 700px;
   width: 700px;
+  margin-right: 10px;
+  flex: 3;
 }
 
 #search {
   margin-top: 17px;
   width: 400px;
+}
+
+.card-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 10px;
+  row-gap: 5px;
+  flex: 2;
+}
+
+.card-featured {
+  background-color: white;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.card-wrapper-other {
+  display: grid;
+  column-gap: 10px;
+  row-gap: 5px;
+  margin-top: 10px;
+}
+
+.card-other {
+  background-color: lightblue;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+img {
+  object-fit: cover;
+  height: 300px;
+  width: 100%;
+}
+
+h2 {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 100;
+}
+
+p {
+  font-family: Arial, Helvetica, sans-serif;
 }
