@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Maps Date Combinations</title>
     <link rel="stylesheet" href="style.css">
-    <script src="app.js"></script>
     <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDoWBesVxVWPUv4CMbKqyMmNy5-YNZOlxs&callback=initMap&libraries=places&v=weekly"
-        defer>
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDoWBesVxVWPUv4CMbKqyMmNy5-YNZOlxs&callback=initMap&libraries=places&v=weekly"
+    defer>
     </script>
 </head>
 <body>
@@ -16,52 +15,45 @@
     <div class="wrapper">
         <div id="map"></div>
 
-        <div class="card-wrapper">
+        <div class="card-wrapper-attr">
             <div class="card-featured ft-attraction">
-                <h2 class="attr-title">Science World</h2>
-                <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/01/78/3f/6c/science-world.jpg?w=700&h=700&s=1"
-                    alt="">
-                <p>Science World ignites the imagination with hands-on interactive exhibits, jaw-dropping live science shows,
-                    and the
-                    giant-screen OMNIMAX Theatre.<br><br>
-                    1455 Quebec St, Vancouver, British Columbia V6A 3Z7 Canada</p>
+                <button class="acc__btn">Section 1</button>
+                <div class="acc__content">
+                    <h2 class="attr-title"></h2>
+                    <img src="" alt="" class="attr-image">
+                    <p class="attr-desc"></p>
+                    <p class="attr-address"></p>
+                </div>
             </div>
+            <div class="card-wrapper-other other-attr">
+            </div>
+        </div>
+
+        <div class="card-wrapper-rest">
             <div class="card-featured ft-restaurant">
-                <h2>Absinthe Bistro</h2>
-                <img src="https://media-cdn.tripadvisor.com/media/photo-f/03/9b/27/e2/absinthe-bistro.jpg" alt="">
-                <p>Local cuisine, French, European, Gluten Free Options<br>
-                    <a href="https://www.bistroabsinthe.com/menu">Menu</a><br>
-                    4.5 429 reviews<br><br>
-                    952 Commercial Dr, Vancouver, British Columbia V5L 3W7 Canada
-                </p>
-            </div>
-            <div class="card-wrapper-other">
-                <div class="card-other">
-                    first
-                </div>
-                <div class="card-other">
-                    second
-                </div>
-                <div class="card-other">
-                    third
+                <button class="acc__btn">Section 2</button>
+                <div class="acc__content">
+                    <h2 class="rest-title"></h2>
+                    <img src="" alt="" class="rest-image">
+                    <p class="rest-cuisine"></p>
+                    <a href="" class="rest-menu">Menu</a><br>
+                    <p class="rest-rating"></p>
                 </div>
             </div>
-            <div class="card-wrapper-other">
-                <div class="card-other">
-                    first
-                </div>
-                <div class="card-other">
-                    second
-                </div>
-                <div class="card-other">
-                    third
-                </div>
+            <div class="card-wrapper-other other-rest">
             </div>
         </div>
 
     
     </div>
-    
 
+     <script src="app.js"></script>
 </body>
 </html>
+
+<!-- <div class="accordian">
+                <button class="acc__btn">Section 1</button>
+                <div class="acc__content">
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam veniam fugiat pariatur autem dolorum voluptates accusamus nostrum facere laborum officiis.</p>
+                </div>
+            </div>  -->

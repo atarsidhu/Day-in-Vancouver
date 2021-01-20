@@ -1,5 +1,6 @@
 html {
   background-color: ghostwhite;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .wrapper {
@@ -11,7 +12,7 @@ html {
   height: 700px;
   width: 700px;
   margin-right: 10px;
-  flex: 3;
+  flex: 5;
 }
 
 #search {
@@ -19,16 +20,18 @@ html {
   width: 400px;
 }
 
-.card-wrapper {
-  display: grid;
+.card-wrapper-attr,
+.card-wrapper-rest {
+  /* display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 10px;
-  row-gap: 5px;
+  row-gap: 5px;*/
   flex: 2;
+  margin: 5px;
 }
 
 .card-featured {
-  background-color: white;
+  background-color: lightskyblue;
   padding: 5px;
   border-radius: 10px;
 }
@@ -41,7 +44,7 @@ html {
 }
 
 .card-other {
-  background-color: lightblue;
+  background-color: lightskyblue;
   padding: 5px;
   border-radius: 10px;
 }
@@ -55,10 +58,50 @@ img {
 h2 {
   margin-top: 5px;
   margin-bottom: 5px;
-  font-family: Arial, Helvetica, sans-serif;
   font-weight: 100;
 }
 
-p {
-  font-family: Arial, Helvetica, sans-serif;
+.acc__btn {
+  /* display: block; */
+  width: 100%;
+  padding: 10px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  background: lightskyblue;
+  /* color: #ffffff; */
+  text-align: left;
+  transition: 0.2s;
+  border-radius: 10px;
+}
+
+.acc__btn::after {
+  content: "\25be";
+  float: right;
+  transform: scale(1.5);
+}
+
+.acc__btn--active {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  transition: 0s;
+}
+.acc__btn--active::after {
+  content: "\25b4";
+}
+
+/* .active,
+.accordion:hover {
+  background-color: #ccc;
+} */
+
+.acc__content {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.2s;
+  padding: 0 15px;
+  background: lightskyblue;
+  border-radius: 10px;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
 }
