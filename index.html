@@ -1,59 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Google Maps Date Combinations</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
     <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDoWBesVxVWPUv4CMbKqyMmNy5-YNZOlxs&callback=initMap&libraries=places&v=weekly"
-    defer>
-    </script>
-</head>
-<body>
-    <input type="text" id="search" placeholder="Search">
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDoWBesVxVWPUv4CMbKqyMmNy5-YNZOlxs&callback=initMap&libraries=places&v=weekly"
+      defer
+    ></script>
+  </head>
+  <body>
+    <input type="text" id="search" placeholder="Search" />
     <div class="wrapper">
-        <div id="map"></div>
+      <div id="map"></div>
 
-        <div class="card-wrapper-attr">
-            <div class="card-featured ft-attraction">
-                <button class="acc__btn">Section 1</button>
-                <div class="acc__content">
-                    <h2 class="attr-title"></h2>
-                    <img src="" alt="" class="attr-image">
-                    <p class="attr-desc"></p>
-                    <p class="attr-address"></p>
-                </div>
-            </div>
-            <div class="card-wrapper-other other-attr">
-            </div>
+      <div class="card-wrapper-attr">
+        <div class="card-featured ft-attraction">
+          <h2 class="attr-title"></h2>
+          <img src="" alt="" class="attr-image" />
+          <p class="attr-desc"></p>
+          <p class="attr-address"></p>
         </div>
+        <div class="card-wrapper-other other-attr"></div>
+      </div>
 
-        <div class="card-wrapper-rest">
-            <div class="card-featured ft-restaurant">
-                <button class="acc__btn">Section 2</button>
-                <div class="acc__content">
-                    <h2 class="rest-title"></h2>
-                    <img src="" alt="" class="rest-image">
-                    <p class="rest-cuisine"></p>
-                    <a href="" class="rest-menu">Menu</a><br>
-                    <p class="rest-rating"></p>
-                </div>
-            </div>
-            <div class="card-wrapper-other other-rest">
-            </div>
+      <div class="card-wrapper-rest">
+        <div class="card-featured ft-restaurant">
+          <h2 class="rest-title"></h2>
+          <img src="" alt="" class="rest-image" />
+          <p class="rest-cuisine"></p>
+          <a href="" class="rest-menu">Menu</a><br />
+          <p class="rest-rating"></p>
         </div>
-
-    
+        <div class="card-wrapper-other other-rest"></div>
+      </div>
     </div>
 
-     <script src="app.js"></script>
-</body>
+    <script src="app.js"></script>
+  </body>
 </html>
-
-<!-- <div class="accordian">
-                <button class="acc__btn">Section 1</button>
-                <div class="acc__content">
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam veniam fugiat pariatur autem dolorum voluptates accusamus nostrum facere laborum officiis.</p>
-                </div>
-            </div>  -->

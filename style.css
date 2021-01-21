@@ -34,6 +34,7 @@ html {
   background-color: lightskyblue;
   padding: 5px;
   border-radius: 10px;
+  height: 500px;
 }
 
 .card-wrapper-other {
@@ -43,7 +44,8 @@ html {
   margin-top: 10px;
 }
 
-.card-other {
+.card-other-attr,
+.card-other-rest {
   background-color: lightskyblue;
   padding: 5px;
   border-radius: 10px;
@@ -59,49 +61,22 @@ h2 {
   margin-top: 5px;
   margin-bottom: 5px;
   font-weight: 100;
+  text-align: center;
+  height: 60px;
 }
 
-.acc__btn {
-  /* display: block; */
-  width: 100%;
-  padding: 10px;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  background: lightskyblue;
-  /* color: #ffffff; */
-  text-align: left;
-  transition: 0.2s;
-  border-radius: 10px;
+.attr-desc {
+  height: 100px;
+  overflow: auto;
+  overflow-x: hidden;
 }
 
-.acc__btn::after {
-  content: "\25be";
-  float: right;
-  transform: scale(1.5);
+::-webkit-scrollbar {
+  width: 7px;
+  background-color: lightgray;
 }
 
-.acc__btn--active {
-  border-bottom-left-radius: 0px;
-  border-bottom-right-radius: 0px;
-  transition: 0s;
-}
-.acc__btn--active::after {
-  content: "\25b4";
-}
-
-/* .active,
-.accordion:hover {
-  background-color: #ccc;
-} */
-
-.acc__content {
-  overflow: hidden;
-  max-height: 0;
-  transition: max-height 0.2s;
-  padding: 0 15px;
-  background: lightskyblue;
-  border-radius: 10px;
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px;
+::-webkit-scrollbar-thumb {
+  background: cornflowerblue;
+  border-radius: 5px;
 }
