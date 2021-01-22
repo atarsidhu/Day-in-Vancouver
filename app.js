@@ -1,15 +1,28 @@
+let map;
+let markerAttr;
+let markerRest;
+
+let restImages = [];
+let streetAddressAttr = "";
+let streetAddressRest = "";
+let type = "";
+
+// Define array where JSON data will be stored
+let attractionArray = [];
+let restaurantArray = [];
+
 function initMap() {
   let options = {
     zoom: 13,
-    center: { lat: 49.2827, lng: -123.1207 },
+    center: { lat: 49.2827, lng: -123.1107 },
   };
 
   // New Map
-  let map = new google.maps.Map(document.getElementById("map"), options);
+  map = new google.maps.Map(document.getElementById("map"), options);
 
-  let marker = new google.maps.Marker({
-    map: map,
-  });
+  // markerAttr = new google.maps.Marker({
+  //   map: map,
+  // });
 
   let input = document.getElementById("search");
   map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
@@ -32,44 +45,28 @@ function initMap() {
       //map.setZoom(17);
     }
 
-    marker.setPosition(place.geometry.location);
-    //marker.setVisible(true);
+    markerAttr.setPosition(place.geometry.location);
+    markerAttr.setVisible(true);
   });
 
-  /*
-            // Add Marker
-            let marker = new google.maps.Marker({
-                position: {lat: 49.3043,lng: -123.1443},
-                map: map
-            });
-
-            // Popup above marker
-            let infoWindow = new google.maps.InfoWindow({
-                content:'<h4>Stanley Park</h4>'
-            });
-
-            marker.addListener('click', function(){
-                infoWindow.open(map, marker);
-            })
-    */
-
-  //addMarker({ lat: 49.3043, lng: -123.1443 });
-  //addMarker({ lat: 49.28877, lng: -123.11767 });
+  addMarker({ lat: 49.2844863, lng: -123.108996 });
+  addMarker2({ lat: 49.2759736, lng: -123.0693516 });
 
   // Add marker function
   function addMarker(coords) {
-    marker = new google.maps.Marker({
+    markerAttr = new google.maps.Marker({
+      position: coords,
+      map: map,
+    });
+  }
+
+  function addMarker2(coords) {
+    markerRest = new google.maps.Marker({
       position: coords,
       map: map,
     });
   }
 }
-
-// Define array where JSON data will be stored
-let attractionArray = [];
-let restaurantArray = [];
-
-let isAttraction = true;
 
 fetch("./web-scrapes/attractions.json")
   .then((response) => response.json())
@@ -97,10 +94,8 @@ fetch("./web-scrapes/attractions.json")
     document.querySelector(".attr-desc").innerHTML = data[0]["desc-short"];
   })
   .then(() => {
-    loadEventListeners(isAttraction);
+    loadEventListeners();
   });
-
-let restImages = [];
 
 fetch("./web-scrapes/restaurants.json")
   .then((response) => response.json())
@@ -122,7 +117,6 @@ fetch("./web-scrapes/restaurants.json")
       restaurantArray[i] = data[i];
     }
 
-    console.log(restaurantArray);
     // Get a list of restaurant names and remove duplicates
     const uniqueNames = [...new Set(data.map((item) => item.name))];
 
@@ -164,6 +158,8 @@ function loadEventListeners() {
           document.querySelector(".attr-image").src =
             attractionArray[j]["image-src"];
 
+          streetAddressAttr = attractionArray[j].address;
+
           if (attractionArray[j]["desc-long"] == null) {
             document.querySelector(".attr-desc").innerHTML =
               attractionArray[j]["desc-short"];
@@ -173,6 +169,8 @@ function loadEventListeners() {
           }
         }
       }
+      type = "attr";
+      geocode(streetAddressAttr, type);
     });
   }
 }
@@ -196,8 +194,38 @@ function loadEventListenersRest() {
             restaurantArray[j]["cuisine"];
           document.querySelector(".rest-rating").innerHTML =
             restaurantArray[j].rating;
+
+          streetAddressRest = restaurantArray[j].address;
         }
       }
+      type = "rest";
+      geocode(streetAddressRest, type);
     });
   }
+}
+
+function geocode(streetAddress, type) {
+  axios
+    .get("https://maps.googleapis.com/maps/api/geocode/json", {
+      params: {
+        address: streetAddress,
+        key: "AIzaSyDoWBesVxVWPUv4CMbKqyMmNy5-YNZOlxs",
+      },
+    })
+    .then(function (response) {
+      let latLng = response.data.results[0].geometry.location;
+      updateMarker(latLng, type);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+
+function updateMarker(latLng, type) {
+  if (type == "attr") {
+    markerAttr.setPosition(latLng);
+  } else {
+    markerRest.setPosition(latLng);
+  }
+  map.panTo(latLng);
 }

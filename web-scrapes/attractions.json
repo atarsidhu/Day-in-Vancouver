@@ -41,9 +41,9 @@
   {
     "web-scraper-order": "1611022536-611",
     "web-scraper-start-url": "https://www.tripadvisor.ca/Attractions-g154943-Activities-a_allAttractions.true-Vancouver_British_Columbia.html",
-    "links": "Vancouver Public Library (Central Library Branch)",
+    "links": "Vancouver Public Library",
     "links-href": "https://www.tripadvisor.ca/Attraction_Review-g154943-d155662-Reviews-Vancouver_Public_Library_Central_Library_Branch-Vancouver_British_Columbia.html",
-    "name": "Vancouver Public Library (Central Library Branch)",
+    "name": "Vancouver Public Library",
     "desc-short": "A striking modern building contains over 130 photo albums on the history of the city.",
     "desc-link-long": null,
     "desc-link-long-href": "",
