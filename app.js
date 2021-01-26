@@ -7,6 +7,7 @@ let restImages = [];
 let streetAddressAttr = "";
 let streetAddressRest = "";
 let latLngBounds = [];
+let imageIdx = 0;
 
 // Define array where JSON data will be stored
 let attractionArray = [];
@@ -147,27 +148,31 @@ fetch("./web-scrapes/restaurants.json")
     document.querySelector(".rest-menu").href = data[0]["menu-href"];
     document.querySelector(".rest-rating").innerHTML = data[0].rating;
 
-    ///////////////////////////////////////////////
-    numberOfImages = restaurantArray[0]["images-src"].length;
-
-    let blah = "";
-    for (let i = 0; i < numberOfImages; i++) {
-      //document.querySelector(".rest-image").src = data[0]["images-src"][i];
-      blah += `<img src="${restaurantArray[0]["images-src"][i]}" alt="" class="rest-image" />`;
-    }
-    console.log(blah);
-
-    // Load images to array
-    for (let k = 0; k < numberOfImages; k++) {
-      imageArray[k] = data[0]["images-src"][k];
-    }
-    console.log(imageArray);
-
-    //////////////////////////////////////////////
+    loadImages(0);
   })
   .then(() => {
     loadEventListenersRest();
   });
+
+function loadImages(num) {
+  imageIdx = 0;
+  numberOfImages = restaurantArray[num]["images-src"].length;
+
+  let images = "";
+  for (let i = 0; i < numberOfImages; i++) {
+    images += `
+        <div class="carousel__images">
+          <img src="${restaurantArray[num]["images-src"][i]}" alt="" class="rest-image" />
+        </div>`;
+  }
+
+  document.querySelector(".carousel").innerHTML = images;
+  let test = document.querySelector(".carousel");
+
+  for (let i = 1; i < numberOfImages; i++) {
+    test.children[i].style.display = "none";
+  }
+}
 
 function loadEventListeners() {
   const theDiv = document.getElementsByClassName("card-other-attr");
@@ -204,10 +209,8 @@ function loadEventListeners() {
 function loadEventListenersRest() {
   const theDiv = document.getElementsByClassName("card-other-rest");
   const carouselButtons = document.getElementsByClassName("carousel__button");
-  // const carouselImages = document.getElementsByClassName("carousel__images");
+  let carouselImages = document.getElementsByClassName("carousel__images");
   let name;
-  let imageIdx = 1;
-  let translateX = 0;
 
   for (let i = 0; i < theDiv.length; i++) {
     theDiv[i].addEventListener("click", (e) => {
@@ -231,36 +234,28 @@ function loadEventListenersRest() {
 
           numberOfImages = restaurantArray[j]["images-src"].length;
 
-          // Load images to array
-          for (let k = 0; k < numberOfImages; k++) {
-            imageArray[k] = restaurantArray[j]["images-src"][k];
-          }
-          console.log(imageArray);
+          loadImages(j);
         }
       }
       geocode(streetAddressRest, markerRest, name);
     });
   }
 
-  let carouselImages = document.getElementsByClassName("rest-image");
-
   Array.from(carouselButtons).forEach((button) => {
     button.addEventListener("click", (e) => {
       if (e.target.id === "prev") {
-        if (imageIdx !== 1) {
+        if (imageIdx !== 0) {
+          carouselImages[imageIdx].style.display = "none";
           imageIdx--;
-          translateX += 300;
+          carouselImages[imageIdx].style.display = "block";
         }
       } else {
-        if (imageIdx !== numberOfImages) {
+        if (imageIdx !== numberOfImages - 1) {
+          carouselImages[imageIdx].style.display = "none";
           imageIdx++;
-          translateX -= 300;
+          carouselImages[imageIdx].style.display = "block";
         }
       }
-
-      console.log(carouselImages[0].style);
-      //carouselImages[0].style.display = "block";
-      carouselImages[0].style.transform = `translateX(${translateX}px)`;
     });
   });
 }

@@ -21,10 +21,6 @@ html {
 
 .card-wrapper-attr,
 .card-wrapper-rest {
-  /* display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 10px;
-  row-gap: 5px;*/
   flex: 2;
   margin: 5px;
 }
@@ -99,17 +95,32 @@ h2 {
 .carousel__button {
   cursor: pointer;
   color: black;
-  font-size: 150%;
-  opacity: 0.25;
+  font-size: 125%;
+  opacity: 0.35;
   position: absolute;
-  transition: opacity 0.25s;
-  z-index: 1;
+  border-radius: 15px;
+  border: none;
+  outline: none;
+}
+
+.carousel:hover + .buttons > .carousel__button {
+  opacity: 0.5;
 }
 
 .prev {
-  left: 5px;
+  top: 220px;
+  right: 307px;
+}
+
+.prev:hover {
+  opacity: 0.75;
 }
 
 .next {
-  right: 5px;
+  top: 220px;
+  right: 25px;
+}
+
+.next:hover {
+  opacity: 0.75;
 }
