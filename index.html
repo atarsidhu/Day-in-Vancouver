@@ -12,7 +12,7 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   </head>
   <body>
-    <input type="text" id="search" placeholder="Search" />
+    <!-- <input type="text" id="search" placeholder="Search" /> -->
     <div class="wrapper">
       <div id="map"></div>
 
@@ -29,7 +29,13 @@
       <div class="card-wrapper-rest">
         <div class="card-featured ft-restaurant">
           <h2 class="rest-title"></h2>
-          <img src="" alt="" class="rest-image" />
+          <div class="carousel">
+            <button class="carousel__button prev" id="prev"><</button>
+            <div class="carousel__images">
+              <img src="" alt="" class="rest-image" />
+            </div>
+            <button class="carousel__button next" id="next">></button>
+          </div>
           <p class="rest-cuisine"></p>
           <a href="" class="rest-menu">Menu</a><br />
           <p class="rest-rating"></p>

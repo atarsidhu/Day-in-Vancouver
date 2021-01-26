@@ -1,11 +1,12 @@
 let map;
 let markerAttr;
 let markerRest;
-
+const markerIcon =
+  "https://raw.githubusercontent.com/Concept211/Google-Maps-Markers/master/images/marker_red.png";
 let restImages = [];
 let streetAddressAttr = "";
 let streetAddressRest = "";
-let type = "";
+let latLngBounds = [];
 
 // Define array where JSON data will be stored
 let attractionArray = [];
@@ -19,10 +20,6 @@ function initMap() {
 
   // New Map
   map = new google.maps.Map(document.getElementById("map"), options);
-
-  // markerAttr = new google.maps.Marker({
-  //   map: map,
-  // });
 
   let input = document.getElementById("search");
   map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
@@ -51,6 +48,10 @@ function initMap() {
 
   addMarker({ lat: 49.2844863, lng: -123.108996 });
   addMarker2({ lat: 49.2759736, lng: -123.0693516 });
+  latLngBounds = [
+    new google.maps.LatLng(49.2844863, -123.108996),
+    new google.maps.LatLng(49.2759736, -123.0693516),
+  ];
 
   // Add marker function
   function addMarker(coords) {
@@ -58,6 +59,8 @@ function initMap() {
       position: coords,
       map: map,
     });
+
+    setMarkerIcon(markerAttr, "Steam Clock");
   }
 
   function addMarker2(coords) {
@@ -65,13 +68,30 @@ function initMap() {
       position: coords,
       map: map,
     });
+
+    setMarkerIcon(markerRest, "Absinthe Bistro");
   }
+}
+
+function setMarkerIcon(markerType, name) {
+  markerType.setLabel({
+    color: "red",
+    fontWeight: "bold",
+    text: name,
+  });
+  markerType.setIcon({
+    labelOrigin: new google.maps.Point(11, 48),
+    url: markerIcon,
+    size: new google.maps.Size(30, 40),
+    origin: new google.maps.Point(0, 0),
+    anchor: new google.maps.Point(11, 40),
+  });
 }
 
 fetch("./web-scrapes/attractions.json")
   .then((response) => response.json())
   .then((data) => {
-    // Retreive all the data and store it into an array
+    // Iterate through the data and store the contents into an array
     for (let i = 0; i < data.length; i++) {
       attractionArray[i] = data[i];
     }
@@ -96,36 +116,25 @@ fetch("./web-scrapes/attractions.json")
   .then(() => {
     loadEventListeners();
   });
+/////////////////////////////////////
+let numberOfImages = 0;
+let imageArray = [];
+////////////////////////////////////
 
 fetch("./web-scrapes/restaurants.json")
   .then((response) => response.json())
   .then((data) => {
-    // Retreive all the data and store it into an array
-    // restaurantArray[0] = data[0];
-    // let j = 0;
-    // for (let i = 1; i < data.length; i++) {
-    //   // WHY CANT WE DO FOREACH ARR WHERE NAME == NAME, ADD IMAGE OR SMTN
-    //   if (data[i].name === restaurantArray[j].name) {
-    //     restImages.push(data[i]["images-src"]);
-    //   } else {
-    //     j++;
-    //     restaurantArray[j] = data[i];
-    //   }
-    // }
-
+    // Iterate through the data and store the contents into an array
     for (let i = 0; i < data.length; i++) {
       restaurantArray[i] = data[i];
     }
 
-    // Get a list of restaurant names and remove duplicates
-    const uniqueNames = [...new Set(data.map((item) => item.name))];
-
     // Populate the restaurants list
     let nameOfRestaurant = "";
-    uniqueNames.forEach(function (restaurant) {
+    data.forEach(function (restaurant) {
       nameOfRestaurant += `
         <div class="card-other-rest">
-          ${restaurant}
+          ${restaurant.name}
         </div>
       `;
     });
@@ -133,17 +142,35 @@ fetch("./web-scrapes/restaurants.json")
 
     // Populate the featured restaurant
     document.querySelector(".rest-title").innerHTML = data[0].name;
-    document.querySelector(".rest-image").src = data[0]["images-src"];
+    document.querySelector(".rest-image").src = data[0]["images-src"][0];
     document.querySelector(".rest-cuisine").innerHTML = data[0].cuisine;
     document.querySelector(".rest-menu").href = data[0]["menu-href"];
     document.querySelector(".rest-rating").innerHTML = data[0].rating;
+
+    ///////////////////////////////////////////////
+    numberOfImages = restaurantArray[0]["images-src"].length;
+
+    let blah = "";
+    for (let i = 0; i < numberOfImages; i++) {
+      //document.querySelector(".rest-image").src = data[0]["images-src"][i];
+      blah += `<img src="${restaurantArray[0]["images-src"][i]}" alt="" class="rest-image" />`;
+    }
+    console.log(blah);
+
+    // Load images to array
+    for (let k = 0; k < numberOfImages; k++) {
+      imageArray[k] = data[0]["images-src"][k];
+    }
+    console.log(imageArray);
+
+    //////////////////////////////////////////////
   })
   .then(() => {
     loadEventListenersRest();
   });
 
 function loadEventListeners() {
-  let theDiv = document.getElementsByClassName("card-other-attr");
+  const theDiv = document.getElementsByClassName("card-other-attr");
   let name;
 
   for (let i = 0; i < theDiv.length; i++) {
@@ -169,15 +196,18 @@ function loadEventListeners() {
           }
         }
       }
-      type = "attr";
-      geocode(streetAddressAttr, type);
+      geocode(streetAddressAttr, markerAttr, name);
     });
   }
 }
 
 function loadEventListenersRest() {
-  let theDiv = document.getElementsByClassName("card-other-rest");
+  const theDiv = document.getElementsByClassName("card-other-rest");
+  const carouselButtons = document.getElementsByClassName("carousel__button");
+  // const carouselImages = document.getElementsByClassName("carousel__images");
   let name;
+  let imageIdx = 1;
+  let translateX = 0;
 
   for (let i = 0; i < theDiv.length; i++) {
     theDiv[i].addEventListener("click", (e) => {
@@ -189,22 +219,53 @@ function loadEventListenersRest() {
           document.querySelector(".rest-title").innerHTML =
             restaurantArray[j].name;
           document.querySelector(".rest-image").src =
-            restaurantArray[j]["images-src"];
+            restaurantArray[j]["images-src"][0];
           document.querySelector(".rest-cuisine").innerHTML =
             restaurantArray[j]["cuisine"];
           document.querySelector(".rest-rating").innerHTML =
             restaurantArray[j].rating;
+          document.querySelector(".rest-menu").href =
+            restaurantArray[j]["menu-href"];
 
           streetAddressRest = restaurantArray[j].address;
+
+          numberOfImages = restaurantArray[j]["images-src"].length;
+
+          // Load images to array
+          for (let k = 0; k < numberOfImages; k++) {
+            imageArray[k] = restaurantArray[j]["images-src"][k];
+          }
+          console.log(imageArray);
         }
       }
-      type = "rest";
-      geocode(streetAddressRest, type);
+      geocode(streetAddressRest, markerRest, name);
     });
   }
+
+  let carouselImages = document.getElementsByClassName("rest-image");
+
+  Array.from(carouselButtons).forEach((button) => {
+    button.addEventListener("click", (e) => {
+      if (e.target.id === "prev") {
+        if (imageIdx !== 1) {
+          imageIdx--;
+          translateX += 300;
+        }
+      } else {
+        if (imageIdx !== numberOfImages) {
+          imageIdx++;
+          translateX -= 300;
+        }
+      }
+
+      console.log(carouselImages[0].style);
+      //carouselImages[0].style.display = "block";
+      carouselImages[0].style.transform = `translateX(${translateX}px)`;
+    });
+  });
 }
 
-function geocode(streetAddress, type) {
+function geocode(streetAddress, markerType, name) {
   axios
     .get("https://maps.googleapis.com/maps/api/geocode/json", {
       params: {
@@ -214,18 +275,78 @@ function geocode(streetAddress, type) {
     })
     .then(function (response) {
       let latLng = response.data.results[0].geometry.location;
-      updateMarker(latLng, type);
+      updateMarker(latLng, markerType, name);
     })
     .catch(function (error) {
       console.log(error);
     });
 }
 
-function updateMarker(latLng, type) {
-  if (type == "attr") {
-    markerAttr.setPosition(latLng);
-  } else {
-    markerRest.setPosition(latLng);
-  }
+function updateMarker(latLng, markerType, name) {
+  let infoWindow = new google.maps.InfoWindow({
+    content: `<h4>${name}</h4>`,
+  });
+
+  markerType.setPosition(latLng);
+
+  setMarkerIcon(markerType, name);
+
+  // markerType.addListener("mouseover", () => {
+  //   infoWindow.open(map, markerType);
+  // });
+  // markerType.addListener("mouseout", () => {
+  //   infoWindow.close();
+  // });
+
   map.panTo(latLng);
+  //map.setZoom(14);
+
+  let myStyle = [
+    {
+      featureType: "administrative",
+      elementType: "labels",
+      stylers: [{ visibility: "off" }],
+    },
+    {
+      featureType: "poi",
+      elementType: "labels",
+      stylers: [{ visibility: "off" }],
+    },
+    {
+      featureType: "road",
+      elementType: "labels",
+      stylers: [{ visibility: "on" }],
+    },
+    {
+      featureType: "transit",
+      elementType: "labels.icon",
+      stylers: [{ visibility: "off" }],
+    },
+  ];
+
+  map.setMapTypeId("mystyle");
+  map.mapTypes.set(
+    "mystyle",
+    new google.maps.StyledMapType(myStyle, { name: "My Style" })
+  );
+
+  // Check to see if name is an attraction name or restaurant name
+  for (let i = 0; i < attractionArray.length; i++) {
+    if (name === attractionArray[i].name) {
+      latLngBounds[0] = latLng;
+      console.log("Attr: " + name);
+      break;
+    }
+    if (name === restaurantArray[i].name) {
+      latLngBounds[1] = latLng;
+      console.log("Rest: " + name);
+      break;
+    }
+  }
+
+  let bounds = new google.maps.LatLngBounds();
+  for (let i = 0; i < latLngBounds.length; i++) {
+    bounds.extend(latLngBounds[i]);
+  }
+  map.fitBounds(bounds);
 }

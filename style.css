@@ -79,3 +79,37 @@ h2 {
   background: cornflowerblue;
   border-radius: 5px;
 }
+
+.carousel {
+  align-items: center;
+  display: flex;
+  margin: 5px;
+  overflow: hidden;
+  position: relative;
+  /* width: 300px; */
+}
+
+.carousel__images {
+  display: flex;
+  transform: translateX(0);
+  transition: transform 0.25s;
+  width: 310px;
+}
+
+.carousel__button {
+  cursor: pointer;
+  color: black;
+  font-size: 150%;
+  opacity: 0.25;
+  position: absolute;
+  transition: opacity 0.25s;
+  z-index: 1;
+}
+
+.prev {
+  left: 5px;
+}
+
+.next {
+  right: 5px;
+}
