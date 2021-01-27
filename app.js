@@ -3,11 +3,11 @@ let markerAttr;
 let markerRest;
 const markerIcon =
   "https://raw.githubusercontent.com/Concept211/Google-Maps-Markers/master/images/marker_red.png";
-let restImages = [];
 let streetAddressAttr = "";
 let streetAddressRest = "";
 let latLngBounds = [];
 let imageIdx = 0;
+let numberOfImages = 0;
 
 // Define array where JSON data will be stored
 let attractionArray = [];
@@ -117,10 +117,6 @@ fetch("./web-scrapes/attractions.json")
   .then(() => {
     loadEventListeners();
   });
-/////////////////////////////////////
-let numberOfImages = 0;
-let imageArray = [];
-////////////////////////////////////
 
 fetch("./web-scrapes/restaurants.json")
   .then((response) => response.json())
@@ -160,18 +156,24 @@ function loadImages(num) {
 
   let images = "";
   for (let i = 0; i < numberOfImages; i++) {
-    images += `
-        <div class="carousel__images">
-          <img src="${restaurantArray[num]["images-src"][i]}" alt="" class="rest-image" />
-        </div>`;
+    images += `<img src="${restaurantArray[num]["images-src"][i]}" alt="" class="rest-image" />`;
   }
 
-  document.querySelector(".carousel").innerHTML = images;
-  let test = document.querySelector(".carousel");
+  let carousel = document.querySelector(".carousel__images");
+  carousel.innerHTML = images;
 
   for (let i = 1; i < numberOfImages; i++) {
-    test.children[i].style.display = "none";
+    carousel.children[i].style.display = "none";
   }
+
+  let dot = "";
+  for (let i = 0; i < numberOfImages; i++) {
+    dot += `<span class="dot"></span>`;
+  }
+
+  let dots = document.querySelector(".dots");
+  dots.innerHTML = dot;
+  dots.firstChild.className = "dot active";
 }
 
 function loadEventListeners() {
@@ -208,8 +210,9 @@ function loadEventListeners() {
 
 function loadEventListenersRest() {
   const theDiv = document.getElementsByClassName("card-other-rest");
-  const carouselButtons = document.getElementsByClassName("carousel__button");
-  let carouselImages = document.getElementsByClassName("carousel__images");
+  const carouselButtons = document.getElementsByClassName("btn");
+  let restImages = document.getElementsByClassName("rest-image");
+  let dots = document.getElementsByClassName("dot");
   let name;
 
   for (let i = 0; i < theDiv.length; i++) {
@@ -245,15 +248,19 @@ function loadEventListenersRest() {
     button.addEventListener("click", (e) => {
       if (e.target.id === "prev") {
         if (imageIdx !== 0) {
-          carouselImages[imageIdx].style.display = "none";
+          restImages[imageIdx].style.display = "none";
+          dots[imageIdx].className = "dot";
           imageIdx--;
-          carouselImages[imageIdx].style.display = "block";
+          restImages[imageIdx].style.display = "block";
+          dots[imageIdx].className = "dot active";
         }
       } else {
         if (imageIdx !== numberOfImages - 1) {
-          carouselImages[imageIdx].style.display = "none";
+          restImages[imageIdx].style.display = "none";
+          dots[imageIdx].className = "dot";
           imageIdx++;
-          carouselImages[imageIdx].style.display = "block";
+          restImages[imageIdx].style.display = "block";
+          dots[imageIdx].className = "dot active";
         }
       }
     });
