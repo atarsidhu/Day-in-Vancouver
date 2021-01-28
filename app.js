@@ -8,6 +8,8 @@ let streetAddressRest = "";
 let latLngBounds = [];
 let imageIdx = 0;
 let numberOfImages = 0;
+let directionsService;
+let directionsDisplay;
 
 // Define array where JSON data will be stored
 let attractionArray = [];
@@ -47,8 +49,8 @@ function initMap() {
     markerAttr.setVisible(true);
   });
 
-  addMarker({ lat: 49.2844863, lng: -123.108996 });
-  addMarker2({ lat: 49.2759736, lng: -123.0693516 });
+  //addMarker({ lat: 49.2844863, lng: -123.108996 });
+  //addMarker2({ lat: 49.2759736, lng: -123.0693516 });
   latLngBounds = [
     new google.maps.LatLng(49.2844863, -123.108996),
     new google.maps.LatLng(49.2759736, -123.0693516),
@@ -72,6 +74,9 @@ function initMap() {
 
     setMarkerIcon(markerRest, "Absinthe Bistro");
   }
+
+  directionsService = new google.maps.DirectionsService();
+  directionsDisplay = new google.maps.DirectionsRenderer();
 }
 
 function setMarkerIcon(markerType, name) {
@@ -203,7 +208,9 @@ function loadEventListeners() {
           }
         }
       }
-      geocode(streetAddressAttr, markerAttr, name);
+      //geocode(streetAddressAttr, markerAttr, name);
+      //console.log(streetAddressAttr);
+      getDirections(streetAddressAttr);
     });
   }
 }
@@ -240,7 +247,8 @@ function loadEventListenersRest() {
           loadImages(j);
         }
       }
-      geocode(streetAddressRest, markerRest, name);
+      //geocode(streetAddressRest, markerRest, name);
+      getDirections(streetAddressRest);
     });
   }
 
@@ -267,21 +275,104 @@ function loadEventListenersRest() {
   });
 }
 
-function geocode(streetAddress, markerType, name) {
-  axios
-    .get("https://maps.googleapis.com/maps/api/geocode/json", {
-      params: {
-        address: streetAddress,
-        key: "AIzaSyDoWBesVxVWPUv4CMbKqyMmNy5-YNZOlxs",
-      },
-    })
-    .then(function (response) {
-      let latLng = response.data.results[0].geometry.location;
-      updateMarker(latLng, markerType, name);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+// function geocode(streetAddress, markerType, name) {
+//   axios
+//     .get("https://maps.googleapis.com/maps/api/geocode/json", {
+//       params: {
+//         address: streetAddress,
+//         key: "AIzaSyDoWBesVxVWPUv4CMbKqyMmNy5-YNZOlxs",
+//       },
+//     })
+//     .then(function (response) {
+//       //let latLng = response.data.results[0].geometry.location;
+//       //updateMarker(latLng, markerType, name);
+//       // let placeID = response.data.results[0].place_id;
+//       // distanceMatrix(placeID);
+//       //console.log(response.data.results[0].geometry.location);
+//       //console.log(streetAddress);
+
+//       //getDirections(streetAddress);
+//       // Check to see if name is an attraction name or restaurant name
+//       for (let i = 0; i < attractionArray.length; i++) {
+//         if (name === attractionArray[i].name) {
+//           let placeIdAttr = response.data.results[0].place_id;
+//           getDirections(placeIdAttr);
+//           break;
+//         }
+//         if (name === restaurantArray[i].name) {
+//           let placeIdRest = response.data.results[0].place_id;
+//           getDirections(placeIdRest);
+//           break;
+//         }
+//       }
+//     })
+//     .catch(function (error) {
+//       console.log(error);
+//     });
+// }
+let start = "305 Water St, Vancouver, British Columbia V6B 1B8 Canada";
+let end = "952 Commercial Dr, Vancouver, British Columbia V5L 3W7 Canada";
+
+function getDirections(streetAddress) {
+  // let proxyURL = "https://cors-anywhere.herokuapp.com/";
+  // let url =
+  //   "https://maps.googleapis.com/maps/api/directions/json?origin=place_id:ChIJDWe3Lp1xhlQRFVVrQy7psuA&destination=place_id:ChIJOVXSPT5xhlQRZVWgqcWl4bY&key=AIzaSyDoWBesVxVWPUv4CMbKqyMmNy5-YNZOlxs";
+  // fetch(proxyURL + url)
+  //   .then((response) => response.json())
+  //   .then((data) => {
+  //     console.log(data);
+  //   })
+  //   .catch(function (error) {
+  //     console.log(error);
+  //   });
+  let name = "";
+
+  for (let i = 0; i < attractionArray.length; i++) {
+    if (streetAddress === attractionArray[i].address) {
+      //let placeIdAttr = response.data.results[0].place_id;
+      name = attractionArray[i].name;
+      start = streetAddress;
+      break;
+    }
+    if (streetAddress === restaurantArray[i].address) {
+      //let placeIdRest = response.data.results[0].place_id;
+      end = streetAddress;
+      break;
+    }
+  }
+
+  directionsDisplay.setMap(map);
+
+  let request = {
+    origin: start,
+    destination: end,
+    travelMode: google.maps.TravelMode.DRIVING,
+  };
+
+  directionsService.route(request, function (response, status) {
+    if (status == "OK") {
+      directionsDisplay.setDirections(response);
+
+      // markerType.setLabel({
+      //   color: "red",
+      //   fontWeight: "bold",
+      //   text: name,
+      // });
+      // markerType.setIcon({
+      //   labelOrigin: new google.maps.Point(11, 48),
+      //   url: markerIcon,
+      //   size: new google.maps.Size(30, 40),
+      //   origin: new google.maps.Point(0, 0),
+      //   anchor: new google.maps.Point(11, 40),
+      // });
+
+      // let marker = new google.maps.Marker({
+      //   position: start,
+      //   map: map,
+      //   label: name
+      // });
+    }
+  });
 }
 
 function updateMarker(latLng, markerType, name) {
