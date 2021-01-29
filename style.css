@@ -8,10 +8,22 @@ html {
   flex-direction: row;
 }
 
-#map {
-  height: 700px;
-  margin-right: 10px;
+.map-directions {
   flex: 5;
+}
+
+#map {
+  height: 600px;
+  margin-right: 10px;
+  /* flex: 5; */
+}
+
+.map-panel {
+  height: auto;
+  /* float: left; */
+  width: auto;
+  /* overflow: auto; */
+  /* background-color: white; */
 }
 
 #search {

@@ -9,7 +9,7 @@ let latLngBounds = [];
 let imageIdx = 0;
 let numberOfImages = 0;
 let directionsService;
-let directionsDisplay;
+let directionsRenderer;
 
 // Define array where JSON data will be stored
 let attractionArray = [];
@@ -76,7 +76,7 @@ function initMap() {
   }
 
   directionsService = new google.maps.DirectionsService();
-  directionsDisplay = new google.maps.DirectionsRenderer();
+  directionsRenderer = new google.maps.DirectionsRenderer();
 }
 
 function setMarkerIcon(markerType, name) {
@@ -341,7 +341,7 @@ function getDirections(streetAddress) {
     }
   }
 
-  directionsDisplay.setMap(map);
+  directionsRenderer.setMap(map);
 
   let request = {
     origin: start,
@@ -350,8 +350,9 @@ function getDirections(streetAddress) {
   };
 
   directionsService.route(request, function (response, status) {
-    if (status == "OK") {
-      directionsDisplay.setDirections(response);
+    if (status === "OK") {
+      directionsRenderer.setDirections(response);
+      console.log(response);
 
       // markerType.setLabel({
       //   color: "red",
@@ -373,73 +374,89 @@ function getDirections(streetAddress) {
       // });
     }
   });
+
+  let panel = document.querySelector(".map-panel");
+  directionsRenderer.setPanel(panel);
+  //map.controls[google.maps.ControlPosition.LEFT_CENTER].push(panel);
 }
 
-function updateMarker(latLng, markerType, name) {
-  let infoWindow = new google.maps.InfoWindow({
-    content: `<h4>${name}</h4>`,
-  });
+// function updateMarker(latLng, markerType, name) {
+//   let infoWindow = new google.maps.InfoWindow({
+//     content: `<h4>${name}</h4>`,
+//   });
 
-  markerType.setPosition(latLng);
+//   markerType.setPosition(latLng);
 
-  setMarkerIcon(markerType, name);
+//   setMarkerIcon(markerType, name);
 
-  // markerType.addListener("mouseover", () => {
-  //   infoWindow.open(map, markerType);
-  // });
-  // markerType.addListener("mouseout", () => {
-  //   infoWindow.close();
-  // });
+//   // markerType.addListener("mouseover", () => {
+//   //   infoWindow.open(map, markerType);
+//   // });
+//   // markerType.addListener("mouseout", () => {
+//   //   infoWindow.close();
+//   // });
 
-  map.panTo(latLng);
-  //map.setZoom(14);
+//   map.panTo(latLng);
+//   //map.setZoom(14);
 
-  let myStyle = [
-    {
-      featureType: "administrative",
-      elementType: "labels",
-      stylers: [{ visibility: "off" }],
-    },
-    {
-      featureType: "poi",
-      elementType: "labels",
-      stylers: [{ visibility: "off" }],
-    },
-    {
-      featureType: "road",
-      elementType: "labels",
-      stylers: [{ visibility: "on" }],
-    },
-    {
-      featureType: "transit",
-      elementType: "labels.icon",
-      stylers: [{ visibility: "off" }],
-    },
-  ];
+//   let myStyle = [
+//     {
+//       featureType: "administrative",
+//       elementType: "labels",
+//       stylers: [{ visibility: "off" }],
+//     },
+//     {
+//       featureType: "poi",
+//       elementType: "labels",
+//       stylers: [{ visibility: "off" }],
+//     },
+//     {
+//       featureType: "road",
+//       elementType: "labels",
+//       stylers: [{ visibility: "on" }],
+//     },
+//     {
+//       featureType: "transit",
+//       elementType: "labels.icon",
+//       stylers: [{ visibility: "off" }],
+//     },
+//   ];
 
-  map.setMapTypeId("mystyle");
-  map.mapTypes.set(
-    "mystyle",
-    new google.maps.StyledMapType(myStyle, { name: "My Style" })
-  );
+//   map.setMapTypeId("mystyle");
+//   map.mapTypes.set(
+//     "mystyle",
+//     new google.maps.StyledMapType(myStyle, { name: "My Style" })
+//   );
 
-  // Check to see if name is an attraction name or restaurant name
-  for (let i = 0; i < attractionArray.length; i++) {
-    if (name === attractionArray[i].name) {
-      latLngBounds[0] = latLng;
-      console.log("Attr: " + name);
-      break;
-    }
-    if (name === restaurantArray[i].name) {
-      latLngBounds[1] = latLng;
-      console.log("Rest: " + name);
-      break;
-    }
-  }
+//   // Check to see if name is an attraction name or restaurant name
+//   for (let i = 0; i < attractionArray.length; i++) {
+//     if (name === attractionArray[i].name) {
+//       latLngBounds[0] = latLng;
+//       console.log("Attr: " + name);
+//       break;
+//     }
+//     if (name === restaurantArray[i].name) {
+//       latLngBounds[1] = latLng;
+//       console.log("Rest: " + name);
+//       break;
+//     }
+//   }
 
-  let bounds = new google.maps.LatLngBounds();
-  for (let i = 0; i < latLngBounds.length; i++) {
-    bounds.extend(latLngBounds[i]);
-  }
-  map.fitBounds(bounds);
-}
+//   let bounds = new google.maps.LatLngBounds();
+//   for (let i = 0; i < latLngBounds.length; i++) {
+//     bounds.extend(latLngBounds[i]);
+//   }
+//   map.fitBounds(bounds);
+// }
+
+/*
+TODO:
+- Scroll for each section attr/rest. When scrolling down, shrink the featured. Then expand when back up
+- Marker work
+- Attr pics?
+- Rest hours. Display as a small popup?
+- Written directions under map
+- Use the Matrix API to calc the distance between the current attr/rest and the others. Display distances 
+	beside name in others section
+- Bring search bar back. Ask user if searched item is rest/attr
+*/
