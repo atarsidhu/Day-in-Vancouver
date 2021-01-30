@@ -1,5 +1,5 @@
 html {
-  background-color: ghostwhite;
+  background-color: white;
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -13,7 +13,7 @@ html {
 }
 
 #map {
-  height: 600px;
+  height: 500px;
   margin-right: 10px;
   /* flex: 5; */
 }
@@ -26,9 +26,18 @@ html {
   /* background-color: white; */
 }
 
-#search {
-  margin-top: 17px;
-  width: 400px;
+.search {
+  margin: 10px 0;
+  width: 48%;
+  height: 25px;
+  border-width: 1px;
+  border-radius: 5px;
+  border-color: rgb(0, 157, 255);
+}
+
+.search:focus {
+  outline-width: 1px;
+  outline-color: rgb(0, 157, 255);
 }
 
 .card-wrapper-attr,
@@ -61,6 +70,11 @@ h1 {
   background-color: lightskyblue;
   padding: 5px;
   border-radius: 10px;
+  text-align: center;
+}
+
+.selected {
+  background-color: rgb(0, 157, 255);
 }
 
 img {
@@ -191,3 +205,12 @@ h2 {
   text-align: center;
   color: rgb(0, 157, 255);
 }
+
+.info-image {
+  width: 300px;
+  height: 300px;
+}
+
+/* .info-window h2 {
+  text-align: center;
+} */
