@@ -1,5 +1,4 @@
 html {
-  background-color: white;
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -26,9 +25,14 @@ html {
   /* background-color: white; */
 }
 
+.search-fields {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .search {
-  margin: 10px 0;
-  width: 48%;
+  margin: 10px 1px;
+  width: 47%;
   height: 25px;
   border-width: 1px;
   border-radius: 5px;
@@ -38,6 +42,56 @@ html {
 .search:focus {
   outline-width: 1px;
   outline-color: rgb(0, 157, 255);
+}
+
+.add-waypoint {
+  background-color: lightskyblue;
+  border-width: 0;
+  cursor: pointer;
+  height: 20px;
+  border-radius: 10px;
+}
+
+.add-waypoint:hover {
+  background-color: rgb(0, 157, 255);
+}
+
+.add-waypoint:focus {
+  outline-width: 0;
+}
+
+.button-popup {
+  margin: auto;
+}
+
+.popup {
+  display: none;
+  background-color: rgb(54, 54, 54);
+  color: white;
+  border-radius: 5px;
+  padding: 3px;
+  position: absolute;
+  z-index: 1;
+  top: 35px;
+  left: 54%;
+}
+
+.hovering {
+  display: block;
+}
+
+.not-hovering {
+  display: none;
+}
+
+.waypoints {
+  margin: auto;
+  width: 50%;
+}
+
+#waypoint-search {
+  margin: 0 0 10px 0;
+  width: 100%;
 }
 
 .card-wrapper-attr,

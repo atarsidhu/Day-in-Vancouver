@@ -14,18 +14,25 @@
   <body>
     <div class="wrapper">
       <div class="map-directions">
-        <input
-          type="text"
-          id="starting-search"
-          class="search"
-          placeholder="Choose Starting Point"
-        />
-        <input
-          type="text"
-          id="destination-search"
-          class="search"
-          placeholder="Choose Destination"
-        />
+        <div class="search-fields">
+          <input
+            type="text"
+            id="starting-search"
+            class="search"
+            placeholder="Choose Starting Point"
+          />
+          <input
+            type="text"
+            id="destination-search"
+            class="search"
+            placeholder="Choose Destination"
+          />
+          <div class="button-popup">
+            <button class="add-waypoint">+</button>
+            <p class="popup not-hovering">Add stop</p>
+          </div>
+        </div>
+        <div class="waypoints"></div>
         <div id="map"></div>
         <div class="map-panel"></div>
       </div>

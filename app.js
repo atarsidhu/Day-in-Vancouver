@@ -18,6 +18,9 @@ let infoWindow;
 let startingPointInput;
 let destinationPointInput;
 let marker;
+let selectedAttr = 0;
+let selectedRest = 0;
+let waypointBtn;
 
 // Define array where JSON data will be stored
 let attractionArray = [];
@@ -174,8 +177,33 @@ function loadImages(num) {
   dots.firstChild.className = "dot active";
 }
 
-let selectedAttr = 0;
-let selectedRest = 0;
+let waypointSearch = "";
+waypointBtn = document.querySelector(".add-waypoint");
+let waypointInput = "";
+
+waypointBtn.addEventListener("click", () => {
+  waypointSearch += `
+    <input
+          type="text"
+          id="waypoint-search"
+          class="search"
+          placeholder="Choose Stop"
+        />`;
+
+  document.querySelector(".waypoints").innerHTML = waypointSearch;
+  document.querySelector(".popup").className = "popup not-hovering";
+
+  waypointInput = document.getElementById("waypoint-search");
+  configAutoComplete(waypointInput);
+});
+
+waypointBtn.addEventListener("mouseover", () => {
+  document.querySelector(".popup").className = "popup hovering";
+});
+
+waypointBtn.addEventListener("mouseout", () => {
+  document.querySelector(".popup").className = "popup not-hovering";
+});
 
 function loadEventListeners() {
   const theDiv = document.getElementsByClassName("card-other-attr");
@@ -284,8 +312,11 @@ function loadEventListenersRest() {
 
 let startingAddress = "";
 let destinationAddress = "";
+let waypointAddress = "";
 let startingName = "";
 let destinationName = "";
+let waypointName = "";
+let leg = "";
 
 function getDirections(streetAddress, name) {
   // let proxyURL = "https://cors-anywhere.herokuapp.com/";
@@ -311,32 +342,52 @@ function getDirections(streetAddress, name) {
       destinationAddress = streetAddress;
       break;
     }
+    //If choosing a place from input fields
     if (i == 28) {
       if (name === "starting-search") {
         startingName = startingPointInput.value;
         startingAddress = streetAddress;
         console.log(startingName + " " + startingAddress);
-      } else {
+      }
+      if (name === "destination-search") {
         destinationName = destinationPointInput.value;
         destinationAddress = streetAddress;
         console.log(destinationName + " " + destinationAddress);
       }
+      if (name === "waypoint-search") {
+        waypointName = waypointInput.value;
+        waypointAddress = streetAddress;
+        console.log(waypointName + " " + waypointAddress);
+      }
     }
   }
+
+  let request = "";
 
   if (startingAddress !== "" && destinationAddress !== "") {
     directionsDisplay.setMap(map);
 
-    let request = {
-      origin: startingAddress,
-      destination: destinationAddress,
-      travelMode: google.maps.TravelMode.DRIVING,
-    };
+    if (waypointAddress !== "") {
+      let waypoint = [{ location: waypointAddress }];
+
+      request = {
+        origin: startingAddress,
+        destination: destinationAddress,
+        travelMode: google.maps.TravelMode.DRIVING,
+        waypoints: waypoint,
+      };
+    } else {
+      request = {
+        origin: startingAddress,
+        destination: destinationAddress,
+        travelMode: google.maps.TravelMode.DRIVING,
+      };
+    }
 
     directionsService.route(request, function (response, status) {
       if (status === "OK") {
         directionsDisplay.setDirections(response);
-        let leg = response.routes[0].legs[0];
+        leg = response.routes[0].legs[0];
         //infoWindow.close();
 
         let content = `<div class="info-window">
@@ -347,6 +398,12 @@ function getDirections(streetAddress, name) {
 
         leg.start_address = startingName;
         leg.end_address = destinationName;
+
+        if (waypointAddress !== "") {
+          response.routes[0].legs[1].end_address = waypointInput;
+        }
+
+        console.log(response);
       }
     });
 
@@ -454,11 +511,12 @@ function createMarker(position, icon) {
 /*
 TODO:
 - Scroll for each section attr/rest. When scrolling down, shrink the featured. Then expand when back up
-- Marker work
 - Attr pics?
 - Rest hours. Display as a small popup?
 - Use the Matrix API to calc the distance between the current attr/rest and the others. Display distances 
-	beside name in others section
-- Bring search bar back. Ask user if searched item is rest/attr
+  beside name in others section
+  
 - Markers can be two attr/rest. Doesnt have to be 1 of each. Add additional markers?
+- Flip directions/ Make rest be marker A
+- Styling
 */
