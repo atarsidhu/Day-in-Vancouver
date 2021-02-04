@@ -21,6 +21,7 @@ let marker;
 let selectedAttr = 0;
 let selectedRest = 0;
 let waypointBtn;
+let waypointArr = [];
 
 // Define array where JSON data will be stored
 let attractionArray = [];
@@ -67,25 +68,66 @@ function configAutoComplete(input) {
       map.setCenter(place.geometry.viewport);
     }
 
+    let name = input.value;
     let searchAddress = place.geometry.location;
+    let singleWaypoint = {
+      id: input.id,
+      name: "",
+      address: "",
+    };
 
-    if (startingPointInput.value !== "" && destinationPointInput.value !== "") {
-      getDirections(searchAddress, input.id);
+    // If selected from list
+    if (
+      startingPointInput.value !== "" &&
+      destinationPointInput.value !== "" &&
+      waypointInput.value === ""
+    ) {
+      console.log("removing marker");
+      getDirections(searchAddress, input.className);
+      removeMarker();
+      console.log("removed successfully");
     } else {
-      if (input.id === "starting-search") {
+      // If starting search field
+      if (input.className.includes("search-start")) {
         if (destinationPointInput.value === "") {
           createMarker(searchAddress, markerIconA);
+          console.log("marker created");
         } else {
           removeMarker();
-        }
-      } else {
-        if (startingPointInput.value === "") {
-          createMarker(searchAddress, markerIconB);
-        } else {
-          removeMarker();
+          console.log("marker removed");
         }
       }
-      getDirections(searchAddress, input.id);
+      // If destination search field
+      else if (input.className.includes("search-destination")) {
+        if (startingPointInput.value === "") {
+          createMarker(searchAddress, markerIconB);
+          console.log("marker created 2");
+        } else {
+          removeMarker();
+          console.log("marker removed 2");
+        }
+      } else {
+        // If it's a waypoint
+        // if n'th waypoint exists (We are modifying an existing singleWaypoint)
+        if (
+          waypointArr.find((singleWaypoint) => singleWaypoint.id === input.id)
+        ) {
+          for (let i in waypointArr) {
+            if (waypointArr[i].id === input.id) {
+              waypointArr[i].name = name;
+              waypointArr[i].address = searchAddress;
+            }
+          }
+        } else {
+          singleWaypoint.name = name;
+          singleWaypoint.address = searchAddress;
+          waypointArr.push(singleWaypoint);
+        }
+        console.log(waypointArr);
+        createMarker(searchAddress, markerIconB);
+      }
+
+      getDirections(searchAddress, input.className);
     }
   });
 }
@@ -180,21 +222,31 @@ function loadImages(num) {
 let waypointSearch = "";
 waypointBtn = document.querySelector(".add-waypoint");
 let waypointInput = "";
+let waypointID = 0;
 
 waypointBtn.addEventListener("click", () => {
-  waypointSearch += `
+  waypointID++;
+
+  waypointSearch = `
     <input
           type="text"
-          id="waypoint-search"
-          class="search"
+          id="waypoint-${waypointID}"
+          class="search search-waypoint"
           placeholder="Choose Stop"
         />`;
 
-  document.querySelector(".waypoints").innerHTML = waypointSearch;
+  document
+    .querySelector(".waypoints")
+    .insertAdjacentHTML("beforeend", waypointSearch);
   document.querySelector(".popup").className = "popup not-hovering";
 
-  waypointInput = document.getElementById("waypoint-search");
-  configAutoComplete(waypointInput);
+  waypointInput = document.getElementsByClassName("search-waypoint");
+
+  configAutoComplete(waypointInput[waypointID - 1]);
+  // for (let i = 0; i < waypointInput.length; i++) {
+  //   configAutoComplete(waypointInput[i]);
+  // }
+  //configAutoComplete(waypointInput);
 });
 
 waypointBtn.addEventListener("mouseover", () => {
@@ -238,7 +290,6 @@ function loadEventListeners() {
           }
         }
       }
-
       getDirections(streetAddressAttr, name);
     });
   }
@@ -333,31 +384,39 @@ function getDirections(streetAddress, name) {
 
   for (let i = 0; i < attractionArray.length; i++) {
     if (streetAddress === attractionArray[i].address) {
-      startingName = name;
+      startingName = attractionArray[i].name;
       startingAddress = streetAddress;
       break;
     }
     if (streetAddress === restaurantArray[i].address) {
-      destinationName = name;
+      destinationName = restaurantArray[i].name;
       destinationAddress = streetAddress;
       break;
     }
     //If choosing a place from input fields
     if (i == 28) {
-      if (name === "starting-search") {
+      if (name.includes("search-start")) {
         startingName = startingPointInput.value;
         startingAddress = streetAddress;
-        console.log(startingName + " " + startingAddress);
+        //console.log(startingName + " " + startingAddress);
       }
-      if (name === "destination-search") {
+      if (name.includes("search-destination")) {
         destinationName = destinationPointInput.value;
         destinationAddress = streetAddress;
-        console.log(destinationName + " " + destinationAddress);
+        //console.log(destinationName + " " + destinationAddress);
       }
-      if (name === "waypoint-search") {
-        waypointName = waypointInput.value;
-        waypointAddress = streetAddress;
-        console.log(waypointName + " " + waypointAddress);
+      if (name.includes("search-waypoint")) {
+        //First waypoint gets overwritten here. Change 0 and change waypointAddress
+
+        for (let i = 0; i < waypointInput.length; i++) {
+          // singleWaypoint.name = waypointInput[i].value;
+          // singleWaypoint.address = streetAddress;
+          console.log("Arrived at get directions: " + waypointArr[i].name);
+        }
+
+        //waypointName = waypointInput[0].value;
+        //waypointAddress = streetAddress;
+        //console.log(waypointName + " " + waypointAddress);
       }
     }
   }
@@ -367,14 +426,19 @@ function getDirections(streetAddress, name) {
   if (startingAddress !== "" && destinationAddress !== "") {
     directionsDisplay.setMap(map);
 
-    if (waypointAddress !== "") {
-      let waypoint = [{ location: waypointAddress }];
+    if (waypointArr.length > 0) {
+      console.log("waypoint accessed");
+
+      let waypointAddresses = [];
+      for (let i = 0; i < waypointArr.length; i++) {
+        waypointAddresses.push({ location: waypointArr[i].address });
+      }
 
       request = {
         origin: startingAddress,
         destination: destinationAddress,
         travelMode: google.maps.TravelMode.DRIVING,
-        waypoints: waypoint,
+        waypoints: waypointAddresses,
       };
     } else {
       request = {
@@ -399,12 +463,15 @@ function getDirections(streetAddress, name) {
         leg.start_address = startingName;
         leg.end_address = destinationName;
 
-        if (waypointAddress !== "") {
-          response.routes[0].legs[1].end_address = waypointInput;
+        // WAYPOINTS NOW WORK. CHANGE DIRECTIONS NAMES BELOW. EXTRA MARKER ON B.
+        if (waypointArr.length > 0) {
+          leg.end_address = waypointName;
+          console.log(leg.end_address + " " + waypointName);
+          response.routes[0].legs[1].end_address = destinationName;
         }
-
-        console.log(response);
       }
+
+      //console.log(response.routes[0]);
     });
 
     let panel = document.querySelector(".map-panel");
@@ -519,4 +586,5 @@ TODO:
 - Markers can be two attr/rest. Doesnt have to be 1 of each. Add additional markers?
 - Flip directions/ Make rest be marker A
 - Styling
+- Allow attr/rest to be a waypoint
 */
