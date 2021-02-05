@@ -1,8 +1,6 @@
 let map;
 let markerAttr;
 let markerRest;
-//const markerIcon =
-//  "https://raw.githubusercontent.com/Concept211/Google-Maps-Markers/master/images/marker_red.png";
 const markerIconA =
   "data:image/svg+xml,%3Csvg%20version%3D%221.1%22%20width%3D%2227px%22%20height%3D%2243px%22%20viewBox%3D%220%200%2027%2043%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%3E%0A%3Cdefs%3E%0A%3Cpath%20id%3D%22a%22%20d%3D%22m12.5%200c-6.9039%200-12.5%205.5961-12.5%2012.5%200%201.8859%200.54297%203.7461%201.4414%205.4617%203.425%206.6156%2010.216%2013.566%2010.216%2022.195%200%200.46562%200.37734%200.84297%200.84297%200.84297s0.84297-0.37734%200.84297-0.84297c0-8.6289%206.7906-15.58%2010.216-22.195%200.89844-1.7156%201.4414-3.5758%201.4414-5.4617%200-6.9039-5.5961-12.5-12.5-12.5z%22%2F%3E%0A%3C%2Fdefs%3E%0A%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%0A%3Cg%20transform%3D%22translate(1%201)%22%3E%0A%3Cuse%20fill%3D%22%23EA4335%22%20fill-rule%3D%22evenodd%22%20xlink%3Ahref%3D%22%23a%22%2F%3E%0A%3Cpath%20d%3D%22m12.5-0.5c7.18%200%2013%205.82%2013%2013%200%201.8995-0.52398%203.8328-1.4974%205.6916-0.91575%201.7688-1.0177%201.9307-4.169%206.7789-4.2579%206.5508-5.9907%2010.447-5.9907%2015.187%200%200.74177-0.6012%201.343-1.343%201.343s-1.343-0.6012-1.343-1.343c0-4.7396-1.7327-8.6358-5.9907-15.187-3.1512-4.8482-3.2532-5.01-4.1679-6.7768-0.97449-1.8608-1.4985-3.7942-1.4985-5.6937%200-7.18%205.82-13%2013-13z%22%20stroke%3D%22%23fff%22%2F%3E%0A%3C%2Fg%3E%0A%3Ctext%20text-anchor%3D%22middle%22%20dy%3D%220.3em%22%20x%3D%2214%22%20y%3D%2215%22%20font-family%3D%22Roboto%2C%20Arial%2C%20sans-serif%22%20font-size%3D%2216px%22%20fill%3D%22%23FFF%22%3EA%3C%2Ftext%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A";
 const markerIconB =
@@ -21,6 +19,7 @@ let marker;
 let selectedAttr = 0;
 let selectedRest = 0;
 let waypointBtn;
+let switchBtn;
 let waypointArr = [];
 
 // Define array where JSON data will be stored
@@ -91,20 +90,16 @@ function configAutoComplete(input) {
       if (input.className.includes("search-start")) {
         if (destinationPointInput.value === "") {
           createMarker(searchAddress, markerIconA);
-          console.log("marker created");
         } else {
           removeMarker();
-          console.log("marker removed");
         }
       }
       // If destination search field
       else if (input.className.includes("search-destination")) {
         if (startingPointInput.value === "") {
           createMarker(searchAddress, markerIconB);
-          console.log("marker created 2");
         } else {
           removeMarker();
-          console.log("marker removed 2");
         }
       } else {
         // If it's a waypoint
@@ -123,8 +118,8 @@ function configAutoComplete(input) {
           singleWaypoint.address = searchAddress;
           waypointArr.push(singleWaypoint);
         }
-        console.log(waypointArr);
-        createMarker(searchAddress, markerIconB);
+        //console.log(waypointArr);
+        //createMarker(searchAddress, markerIconB);
       }
 
       getDirections(searchAddress, input.className);
@@ -221,54 +216,64 @@ function loadImages(num) {
 
 let waypointSearch = "";
 waypointBtn = document.querySelector(".add-waypoint");
+switchBtn = document.querySelector(".btn-switch");
 let waypointInput = "";
 let waypointID = 0;
 
 waypointBtn.addEventListener("click", () => {
   waypointID++;
 
-  waypointSearch = `
-    <input
-          type="text"
-          id="waypoint-${waypointID}"
-          class="search search-waypoint"
-          placeholder="Choose Stop"
-        />`;
+  if (waypointID <= 5) {
+    waypointSearch = `
+      <input
+            type="text"
+            id="waypoint-${waypointID}"
+            class="search search-waypoint"
+            placeholder="Choose Stop"
+          />`;
 
-  document
-    .querySelector(".waypoints")
-    .insertAdjacentHTML("beforeend", waypointSearch);
-  document.querySelector(".popup").className = "popup not-hovering";
+    document
+      .querySelector(".waypoints")
+      .insertAdjacentHTML("beforeend", waypointSearch);
+    document.querySelector(".popup-stop").className = "popup-stop not-hovering";
 
-  waypointInput = document.getElementsByClassName("search-waypoint");
+    waypointInput = document.getElementsByClassName("search-waypoint");
 
-  configAutoComplete(waypointInput[waypointID - 1]);
-  // for (let i = 0; i < waypointInput.length; i++) {
-  //   configAutoComplete(waypointInput[i]);
-  // }
-  //configAutoComplete(waypointInput);
+    configAutoComplete(waypointInput[waypointID - 1]);
+  } else {
+    alert("Maximum stops reached");
+  }
 });
 
 waypointBtn.addEventListener("mouseover", () => {
-  document.querySelector(".popup").className = "popup hovering";
+  document.querySelector(".popup-stop").className = "popup-stop hovering";
 });
 
 waypointBtn.addEventListener("mouseout", () => {
-  document.querySelector(".popup").className = "popup not-hovering";
+  document.querySelector(".popup-stop").className = "popup-stop not-hovering";
+});
+
+switchBtn.addEventListener("mouseover", () => {
+  document.querySelector(".popup-switch").className = "popup-switch hovering";
+});
+
+switchBtn.addEventListener("mouseout", () => {
+  document.querySelector(".popup-switch").className =
+    "popup-switch not-hovering";
 });
 
 function loadEventListeners() {
-  const theDiv = document.getElementsByClassName("card-other-attr");
+  const otherAttr = document.getElementsByClassName("card-other-attr");
   let name;
 
-  for (let i = 0; i < theDiv.length; i++) {
-    theDiv[i].addEventListener("click", (e) => {
+  for (let i = 0; i < otherAttr.length; i++) {
+    otherAttr[i].addEventListener("click", (e) => {
       name = e.target.innerText;
       window.scrollTo(0, 0);
       startingPointInput.value = name;
 
       // Change background of selected attr
-      theDiv[selectedAttr].className = "card-other-attr";
+      otherAttr[selectedAttr].className = "card-other-attr";
       selectedAttr = i;
       e.target.className = "card-other-attr selected";
 
@@ -338,6 +343,7 @@ function loadEventListenersRest() {
     });
   }
 
+  // Image carousel
   Array.from(carouselButtons).forEach((button) => {
     button.addEventListener("click", (e) => {
       if (e.target.id === "prev") {
@@ -405,19 +411,6 @@ function getDirections(streetAddress, name) {
         destinationAddress = streetAddress;
         //console.log(destinationName + " " + destinationAddress);
       }
-      if (name.includes("search-waypoint")) {
-        //First waypoint gets overwritten here. Change 0 and change waypointAddress
-
-        for (let i = 0; i < waypointInput.length; i++) {
-          // singleWaypoint.name = waypointInput[i].value;
-          // singleWaypoint.address = streetAddress;
-          console.log("Arrived at get directions: " + waypointArr[i].name);
-        }
-
-        //waypointName = waypointInput[0].value;
-        //waypointAddress = streetAddress;
-        //console.log(waypointName + " " + waypointAddress);
-      }
     }
   }
 
@@ -427,8 +420,6 @@ function getDirections(streetAddress, name) {
     directionsDisplay.setMap(map);
 
     if (waypointArr.length > 0) {
-      console.log("waypoint accessed");
-
       let waypointAddresses = [];
       for (let i = 0; i < waypointArr.length; i++) {
         waypointAddresses.push({ location: waypointArr[i].address });
@@ -454,24 +445,18 @@ function getDirections(streetAddress, name) {
         leg = response.routes[0].legs[0];
         //infoWindow.close();
 
-        let content = `<div class="info-window">
-        <h3 class="info-title">${startingName}</h3>
-        </div>`;
-        infoWindow.setContent(content);
-        infoWindow.setPosition(leg.start_location);
-
         leg.start_address = startingName;
         leg.end_address = destinationName;
 
-        // WAYPOINTS NOW WORK. CHANGE DIRECTIONS NAMES BELOW. EXTRA MARKER ON B.
         if (waypointArr.length > 0) {
-          leg.end_address = waypointName;
-          console.log(leg.end_address + " " + waypointName);
-          response.routes[0].legs[1].end_address = destinationName;
+          let route = response.routes[0];
+          for (let i = 0; i < waypointArr.length; i++) {
+            route.legs[i].end_address = waypointArr[i].name;
+          }
+
+          route.legs[waypointArr.length].end_address = destinationName;
         }
       }
-
-      //console.log(response.routes[0]);
     });
 
     let panel = document.querySelector(".map-panel");

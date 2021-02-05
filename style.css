@@ -32,7 +32,7 @@ html {
 
 .search {
   margin: 10px 1px;
-  width: 47%;
+  width: 45%;
   height: 25px;
   border-width: 1px;
   border-radius: 5px;
@@ -42,6 +42,15 @@ html {
 .search:focus {
   outline-width: 1px;
   outline-color: rgb(0, 157, 255);
+}
+
+.switch {
+  margin: auto;
+}
+
+.switch-image {
+  height: 11px;
+  width: 11px;
 }
 
 .add-waypoint {
@@ -64,7 +73,8 @@ html {
   margin: auto;
 }
 
-.popup {
+.popup-stop,
+.popup-switch {
   display: none;
   background-color: rgb(54, 54, 54);
   color: white;
@@ -73,7 +83,7 @@ html {
   position: absolute;
   z-index: 1;
   top: 35px;
-  left: 54%;
+  left: 52%;
 }
 
 .hovering {
