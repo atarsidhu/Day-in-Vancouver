@@ -21,6 +21,7 @@ let selectedRest = 0;
 let waypointBtn;
 let switchBtn;
 let waypointArr = [];
+let isAttrOrRestFlipped;
 
 // Define array where JSON data will be stored
 let attractionArray = [];
@@ -253,6 +254,45 @@ waypointBtn.addEventListener("mouseout", () => {
   document.querySelector(".popup-stop").className = "popup-stop not-hovering";
 });
 
+switchBtn.addEventListener("click", () => {
+  let temp = "";
+  isAttrOrRestFlipped = false;
+
+  temp = startingPointInput.value;
+  startingPointInput.value = destinationPointInput.value;
+  destinationPointInput.value = temp;
+
+  // Getting address if attr/rest is selected from list
+  for (let i = 0; i < attractionArray.length; i++) {
+    if (
+      startingPointInput.value === attractionArray[i].name ||
+      destinationPointInput.value === attractionArray[i].name
+    ) {
+      streetAddressAttr = attractionArray[i].address;
+      isAttrOrRestFlipped = true;
+      console.log("attraction - isFlipped = true");
+    }
+    if (
+      destinationPointInput.value === restaurantArray[i].name ||
+      startingPointInput.value === restaurantArray[i].name
+    ) {
+      streetAddressRest = restaurantArray[i].address;
+      isAttrOrRestFlipped = true;
+      console.log("restaraunt - isFlipped = true");
+    }
+  }
+
+  if (isAttrOrRestFlipped) {
+    console.log("Attr: " + streetAddressAttr + "\nRest: " + streetAddressRest);
+    getDirections(streetAddressAttr, "");
+    flippedOneAddress = true;
+    getDirections(streetAddressRest, "");
+  } else {
+    getDirections(startingPointInput.value, "search-start");
+    getDirections(destinationPointInput.value, "search-destination");
+  }
+});
+
 switchBtn.addEventListener("mouseover", () => {
   document.querySelector(".popup-switch").className = "popup-switch hovering";
 });
@@ -301,20 +341,20 @@ function loadEventListeners() {
 }
 
 function loadEventListenersRest() {
-  const theDiv = document.getElementsByClassName("card-other-rest");
+  const otherRest = document.getElementsByClassName("card-other-rest");
   const carouselButtons = document.getElementsByClassName("btn");
   let restImages = document.getElementsByClassName("rest-image");
   let dots = document.getElementsByClassName("dot");
   let name;
 
-  for (let i = 0; i < theDiv.length; i++) {
-    theDiv[i].addEventListener("click", (e) => {
+  for (let i = 0; i < otherRest.length; i++) {
+    otherRest[i].addEventListener("click", (e) => {
       name = e.target.innerText;
       window.scrollTo(0, 0);
       destinationPointInput.value = name;
 
       // Change background of selected rest
-      theDiv[selectedRest].className = "card-other-rest";
+      otherRest[selectedRest].className = "card-other-rest";
       selectedRest = i;
       e.target.className = "card-other-rest selected";
 
@@ -374,6 +414,7 @@ let startingName = "";
 let destinationName = "";
 let waypointName = "";
 let leg = "";
+let flippedOneAddress = false;
 
 function getDirections(streetAddress, name) {
   // let proxyURL = "https://cors-anywhere.herokuapp.com/";
@@ -389,15 +430,18 @@ function getDirections(streetAddress, name) {
   //   });
 
   for (let i = 0; i < attractionArray.length; i++) {
-    if (streetAddress === attractionArray[i].address) {
-      startingName = attractionArray[i].name;
-      startingAddress = streetAddress;
-      break;
-    }
-    if (streetAddress === restaurantArray[i].address) {
-      destinationName = restaurantArray[i].name;
-      destinationAddress = streetAddress;
-      break;
+    if (!isAttrOrRestFlipped) {
+      //console.log("isFlipped = false");
+      if (streetAddress === attractionArray[i].address) {
+        startingName = attractionArray[i].name;
+        startingAddress = streetAddress;
+        break;
+      }
+      if (streetAddress === restaurantArray[i].address) {
+        destinationName = restaurantArray[i].name;
+        destinationAddress = streetAddress;
+        break;
+      }
     }
     //If choosing a place from input fields
     if (i == 28) {
@@ -412,6 +456,18 @@ function getDirections(streetAddress, name) {
         //console.log(destinationName + " " + destinationAddress);
       }
     }
+  }
+
+  if (isAttrOrRestFlipped && !flippedOneAddress) {
+    destinationAddress = streetAddress;
+    console.log(
+      "flippedOneAddress = false\nDest Address: " + destinationAddress
+    );
+  }
+  if (isAttrOrRestFlipped && flippedOneAddress) {
+    startingAddress = streetAddress;
+    console.log("flippedOneAddress = true\nStart Address: " + startingAddress);
+    flippedOneAddress = false;
   }
 
   let request = "";
