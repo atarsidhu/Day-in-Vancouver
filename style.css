@@ -14,15 +14,11 @@ html {
 #map {
   height: 500px;
   margin-right: 10px;
-  /* flex: 5; */
 }
 
 .map-panel {
   height: auto;
-  /* float: left; */
   width: auto;
-  /* overflow: auto; */
-  /* background-color: white; */
 }
 
 .search-fields {
@@ -178,13 +174,10 @@ h2 {
   margin: 5px;
   overflow: hidden;
   position: relative;
-  /* width: 300px; */
 }
 
 .carousel__images {
   display: flex;
-  /* transform: translateX(0);
-  transition: transform 0.25s; */
   width: 100%;
 }
 
@@ -275,7 +268,3 @@ h2 {
   width: 300px;
   height: 300px;
 }
-
-/* .info-window h2 {
-  text-align: center;
-} */
