@@ -1,3 +1,4 @@
+// Global Variables
 let map;
 const markerIconA =
   "data:image/svg+xml,%3Csvg%20version%3D%221.1%22%20width%3D%2227px%22%20height%3D%2243px%22%20viewBox%3D%220%200%2027%2043%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%3E%0A%3Cdefs%3E%0A%3Cpath%20id%3D%22a%22%20d%3D%22m12.5%200c-6.9039%200-12.5%205.5961-12.5%2012.5%200%201.8859%200.54297%203.7461%201.4414%205.4617%203.425%206.6156%2010.216%2013.566%2010.216%2022.195%200%200.46562%200.37734%200.84297%200.84297%200.84297s0.84297-0.37734%200.84297-0.84297c0-8.6289%206.7906-15.58%2010.216-22.195%200.89844-1.7156%201.4414-3.5758%201.4414-5.4617%200-6.9039-5.5961-12.5-12.5-12.5z%22%2F%3E%0A%3C%2Fdefs%3E%0A%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%0A%3Cg%20transform%3D%22translate(1%201)%22%3E%0A%3Cuse%20fill%3D%22%23EA4335%22%20fill-rule%3D%22evenodd%22%20xlink%3Ahref%3D%22%23a%22%2F%3E%0A%3Cpath%20d%3D%22m12.5-0.5c7.18%200%2013%205.82%2013%2013%200%201.8995-0.52398%203.8328-1.4974%205.6916-0.91575%201.7688-1.0177%201.9307-4.169%206.7789-4.2579%206.5508-5.9907%2010.447-5.9907%2015.187%200%200.74177-0.6012%201.343-1.343%201.343s-1.343-0.6012-1.343-1.343c0-4.7396-1.7327-8.6358-5.9907-15.187-3.1512-4.8482-3.2532-5.01-4.1679-6.7768-0.97449-1.8608-1.4985-3.7942-1.4985-5.6937%200-7.18%205.82-13%2013-13z%22%20stroke%3D%22%23fff%22%2F%3E%0A%3C%2Fg%3E%0A%3Ctext%20text-anchor%3D%22middle%22%20dy%3D%220.3em%22%20x%3D%2214%22%20y%3D%2215%22%20font-family%3D%22Roboto%2C%20Arial%2C%20sans-serif%22%20font-size%3D%2216px%22%20fill%3D%22%23FFF%22%3EA%3C%2Ftext%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A";
@@ -14,18 +15,16 @@ let destinationPointInput = document.getElementById("destination-search");
 let markerArr = [];
 let selectedAttr = 0;
 let selectedRest = 0;
-let switchBtn;
 let isFieldSwitched;
 
 // Waypoint variable declarations
-let waypointBtn;
+let waypointBtn = document.querySelector(".add-waypoint");
 let waypointArr = [];
 let waypointSearch = "";
-waypointBtn = document.querySelector(".add-waypoint");
 let waypointInput = "";
 let waypointID = 0;
 
-switchBtn = document.querySelector(".btn-switch");
+let switchBtn = document.querySelector(".btn-switch");
 let startingAddress = "";
 let destinationAddress = "";
 let startingName = "";
@@ -132,6 +131,7 @@ function configAutoComplete(input) {
     getDirections(searchAddress, input.className);
   });
 }
+
 /**
  * Fetch attraction data from webscrapes
  */
@@ -530,10 +530,3 @@ function createMarker(position, icon) {
 
   markerArr.push(marker);
 }
-
-/*
-TODO:
-- Markers can be two attr/rest. Doesnt have to be 1 of each. Add additional markers?
-- Flip directions/ Make rest be marker A
-- Allow attr/rest to be a waypoint
-*/
