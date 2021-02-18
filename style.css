@@ -351,11 +351,11 @@ h2 {
   }
 
   h1 {
-    font-size: 120%;
+    font-size: 150%;
   }
 
   h2 {
-    font-size: 100%;
+    font-size: 120%;
   }
 
   .card-other-attr,
@@ -380,5 +380,9 @@ h2 {
   .search-start,
   .search-destination {
     width: 37%;
+  }
+
+  .search-waypoint {
+    width: 70%;
   }
 }
