@@ -379,7 +379,7 @@ h2 {
 @media (max-width: 366px) {
   .search-start,
   .search-destination {
-    width: 37%;
+    width: 35%;
   }
 
   .search-waypoint {
