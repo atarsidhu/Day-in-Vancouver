@@ -10,6 +10,8 @@ const markerIconB =
 let streetAddressAttr = "";
 let streetAddressRest = "";
 
+let deletethis = "";
+
 let imageIdx = 0;
 let numberOfImages = 0;
 
